@@ -36,7 +36,7 @@ typedef struct sensorPackets {
     sensorPacket    temperature;        // 24, 1, signed
     sensorPacket    batteryCharge;      // 25, 2, unsigned
     sensorPacket    batteryCapacity;    // 26, 2, unsigned
-    
+
 }sensorPacketList;
 
 
@@ -164,7 +164,7 @@ void roombaCmdFromSeek(int* roombaState, din7Connector roombaDin, int cmdOpCode)
  ** Packet ID 21: Charging
  **---------------------------------------------------------------------------*/
 void askSensorData(int packetID){
-    
+
     cmdRoomba(148);
     cmdRoomba(1);
     cmdRoomba(packetID);

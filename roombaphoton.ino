@@ -1,12 +1,15 @@
+// This #include statement was automatically added by the Particle IDE.
+#include "roomba.h"
+
 /*-----------------------------------------------------------------------------
  **                        � Arturo Jumpa
  ** File: roombaPhoton.c
  **
  ** Description:
  ** Connect's particle photon with Roomba Open Interface commands
- 
+
  Summary of Roomba Open Interface Spec:
- 
+
  3 operating modes: Passive, Safe, and Full
  -Passive(128): Sleeps after 5 min inactive. Other modes drain battery
  -Safe(131):    Allows user control but safety condition reverts it to Passive mode
@@ -48,7 +51,7 @@ void setup() {
     pinMode(D5, OUTPUT);
     pinMode(ledPin,OUTPUT);                     // use built in led for feedback
     roombaTimeMark = millis();                  // start timer
-    
+
     // set up API connection
     Spark.function("webCmd",receiveWebCmd);
     Serial.println("Setup complete");
@@ -63,7 +66,7 @@ int receiveWebCmd(String command){
 
 
 /*****************************************************************************************
- *             todo:  Rreading roomba sensor packets
+ *             todo:  Reading roomba sensor packets
  * - Bug with Serial1.read(). Sometimes reads more than 8 bits...
  *
  * ********************************************************************************************/
@@ -171,7 +174,7 @@ int receiveWebCmd(String command){
  ----------------------------------------------------------------*/
 void loop() {
     /*---------------------Receive cmds from Serial or API---------------------------------*/
-    
+
     // Commanding from serial monitor. Ascii to decimal
     // examples:  "*" -> 128;     "1" -> 135;       "9" -> 143,      "?" -> 149
     if (Serial.available() > 0 ){
@@ -180,7 +183,7 @@ void loop() {
         cmdRoomba(roombaCmd);
     }
     // receiveWebCmd happens asynchronously
-    
+
     /*---------------------Perform cmd and update state---------------------------------*/
     if(roombaCmd != 0){
         Serial.print("--Cmd: "); Serial.println(roombaCmd);
@@ -201,16 +204,16 @@ void loop() {
         ledState = !ledState;                // flip led to signal cmd was received
         roombaCmd = 0;                         // reset received cmd
     }// End if(roombaCmd)
-    
+
     /*--------------------Check timers and read Roomba response---------------------------------*/
     if(IsTime(&roombaTimeMark, roombaIOtimeout) && artuRoomba.roombaState != ASLEEP  ) {
         Serial.println("Roomba went to sleep!");
         artuRoomba.roombaState=ASLEEP;
     }
-    
+
     /*----- todo: implement reading sensor packets to update roomba's state  ---*/
-    
-    
+
+
     // sample serial received msgs that are not sensor packets.
     while(Serial1.available()) {
         if (readBufOffset < READ_BUF_SIZE) {
@@ -224,5 +227,5 @@ void loop() {
         }
         else {            readBufOffset = 0;        }        // empty buffer; overflow
     }
-    
+
 }
